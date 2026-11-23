@@ -1,0 +1,21 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: hotel-jpa-mysql
+    environment:
+      MYSQL_DATABASE: hotel_jpa_db
+      MYSQL_USER: ${HOTEL_JPA_USER:-hotel_jpa}
+      MYSQL_PASSWORD: ${HOTEL_JPA_PASSWORD:-hotel_jpa_dev}
+      MYSQL_ROOT_PASSWORD: ${HOTEL_JPA_ROOT_PASSWORD:-hotel_jpa_root_dev}
+    ports:
+      - "127.0.0.1:3308:3306"
+    volumes:
+      - hotel_jpa_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  hotel_jpa_mysql_data:
